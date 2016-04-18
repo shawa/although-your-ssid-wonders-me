@@ -2,8 +2,6 @@ import Data.Bits
 import Data.List
 import qualified Data.ByteString.Char8 as B
 import Crypto.Hash
-import System.Environment
-
 
 type MacAddress = Int
 type SerialNumber = String
@@ -24,7 +22,7 @@ getMac ssid = oct `xor` netopiaMac
 
 
 getSerialNumber :: MacAddress -> SerialNumber
-getSerialNumber mac = show $ mac + netopiaSerialBegin
+getSerialNumber mac = show (mac + netopiaSerialBegin)
 
 wordify :: Char -> String
 wordify '1' = "One"
@@ -39,15 +37,12 @@ wordify '9' = "Nine"
 wordify _   = ""
 
 computeWep :: String -> WepKey
-computeWep mac = B.take 26 $ sha1Hex $ B.pack (mac' ++ jimi)
-                 where mac' = concat $ map wordify mac
+computeWep mac = (B.take 26 . sha1Hex . B.pack) (mac' ++ jimi)
+                 where mac'      = concat (map wordify mac)
+                       sha1Hex s = digestToHexByteString (hash s :: Digest SHA1)
 
 thinger :: String -> String
 thinger ssid = (show . computeWep . getSerialNumber . getMac) ssid
-
-sha1Hex :: B.ByteString -> B.ByteString
-sha1Hex s = digestToHexByteString (hash s :: Digest SHA1)
-
 
 main :: IO ()
 main = interact thinger
