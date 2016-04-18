@@ -1,5 +1,5 @@
 # Although Your SSID Wonders Me
-Haskell Implementation of [Netopia's famous WEP key derivation function](http://www.bacik.ie/eircomwep/howto.html), based on the device MAC address because
+Haskell Implementation of [Netopia's famous WEP key derivation function](http://www.bacik.ie/eircomwep/howto.html), based on the device MAC address (!!) because
 
 1. I wanted to see how the KDF works
 2. I'm learning Haskell
