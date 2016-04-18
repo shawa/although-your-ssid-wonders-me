@@ -25,6 +25,7 @@ getSerialNumber :: MacAddress -> SerialNumber
 getSerialNumber mac = show (mac + netopiaSerialBegin)
 
 wordify :: Char -> String
+wordify '0' = "Zero"
 wordify '1' = "One"
 wordify '2' = "Two"
 wordify '3' = "Three"
@@ -38,11 +39,11 @@ wordify _   = ""
 
 computeWep :: String -> WepKey
 computeWep mac = (B.take 26 . sha1Hex . B.pack) (mac' ++ jimi)
-                 where mac'      = concat (map wordify mac)
+                 where mac'      = concatMap wordify mac
                        sha1Hex s = digestToHexByteString (hash s :: Digest SHA1)
 
 thinger :: String -> String
-thinger ssid = (show . computeWep . getSerialNumber . getMac) ssid
+thinger = show . computeWep . getSerialNumber . getMac
 
 main :: IO ()
 main = interact thinger
